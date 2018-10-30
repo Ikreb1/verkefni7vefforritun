@@ -6,6 +6,8 @@
 
 // fasti sem segir til um hve marga leiki eigi að spila
 const GAMES_TO_PLAY = 10;
+var question = "Hvað er ";
+var count = 0;
 
 /**
  * Birtir upplýsingar um leik og eftir að notandi samþykkir spilar fyrsta leik
@@ -13,7 +15,13 @@ const GAMES_TO_PLAY = 10;
  * Eftir leik er notanda boðið að spila annan leik, ef ekki hættir forrit.
  */
 function start() {
-  villa;
+	window.confirm("Markmiðið er að svara eins mörgum af 10 dæmum rétt eins hratt og mögulegt er.");
+	play();
+	var yesNo = window.confirm("Spila annan leik");
+	while(yesNo) {
+		play();
+		yesNo = window.confirm("Spila annan leik");
+	}
 }
 
 /**
@@ -28,6 +36,25 @@ function start() {
  *
  */
 function play() {
+	var checker;
+	var answer;
+	var start = new Date().getTime();
+	
+	for(var i = 0;i < GAMES_TO_PLAY;i++) {
+		checker = ask();
+		answer = window.prompt(question);
+		if(answer == null) {
+			window.alert("Hætt í leik.");
+			return;
+		}
+		if(parseInt(answer) === checker) {
+			count++;
+		}
+	}
+	var end = new Date().getTime();
+	var time = (end - start) / 1000;
+	var timePer = time / 10;
+	window.alert("Þú svaraðir " + count + " af 10 dæmum rétt á " + time.toFixed(2) + " sekúndum \n Meðalrétt svör á sekúndu eru " + timePer.toFixed(2));
 }
 
 /**
@@ -45,6 +72,42 @@ function play() {
  * Sniðugt væri að færa það að búa til spurningu í nýtt fall sem ask() kallar í.
  */
 function ask() {
+	var number1;
+	var number2;
+	var sum;
+	question = "Hvað er ";
+	switch(randomNumber(0, 3)) {
+		// 0 = +, 1 = -, 2 = *, 3 = /
+		case 0: {
+			number1 = randomNumber(1, 100);
+			number2 = randomNumber(1, 100);
+			question = question + number1 + " + " + number2;
+			sum = number1 + number2;
+			break;
+		}
+		case 1: {
+			number1 = randomNumber(1, 100);
+			number2 = randomNumber(1, 100);
+			question = question + number1 + " - " + number2;
+			sum = number1 - number2;
+			break;
+		}
+		case 2: {
+			number1 = randomNumber(1, 10);
+			number2 = randomNumber(1, 10);
+			question = question + number1 + " * " + number2;
+			sum = number1 * number2;
+			break;
+		}
+		case 3: {
+			number1 = randomNumber(2, 10);
+			number2 = randomNumber(2, 10);
+			question = question + number1 * number2 + " / " + number2;
+			sum = (number1 * number2) / number2;
+			break;
+		}
+	}
+	return sum;
 }
 
 /**
